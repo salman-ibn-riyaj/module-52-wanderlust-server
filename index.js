@@ -25,6 +25,27 @@ const run = async () => {
 
     const database = client.db("wanderlust");
     const destinationCollection = database.collection("destinations");
+    const bookingCollection = database.collection('bookings');
+
+    app.post('/bookings', async(req, res)=>{
+      const bookingData = req.body;
+      const result = await bookingCollection.insertOne(bookingData);
+      res.send(result)
+    })
+
+    app.get('/bookings/:userId', async(req, res)=>{
+      const userId = req.params.userId;
+      const result = await bookingCollection.find({userId:userId}).toArray();
+      res.send(result);
+    })
+    app.delete('/bookings/:booking', async(req, res)=>{
+      const bookingId = req.params.booking;
+      const query = {_id: new ObjectId(bookingId)}
+      const result = await bookingCollection.deleteOne(query)
+      console.log(result, 'ekhan theke');
+      res.send(result);
+      
+    })
 
     app.post('/destinations', async(req, res)=>{
         const destinationData = req.body;
@@ -66,6 +87,8 @@ const run = async () => {
       const result = await destinationCollection.deleteOne(filter);
       res.send(result);
     } )
+
+
 
   
     await client.db("admin").command({ ping: 1 });
