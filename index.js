@@ -31,6 +31,7 @@ const run = async () => {
       const bookingData = req.body;
       const result = await bookingCollection.insertOne(bookingData);
       res.send(result)
+      
     })
 
     app.get('/bookings/:userId', async(req, res)=>{
